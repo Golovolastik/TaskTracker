@@ -72,20 +72,11 @@ pub fn change_status(input: String) -> Menu {
 pub fn read_csv() -> Result<(), Box<dyn Error>> {
     let file_path = String::from("task.csv");
     let file = File::open(file_path)?;
-    //let mut rdr = csv::Reader::from_reader(file);
     let mut rdr = csv::ReaderBuilder::new().delimiter(b';').from_path("task.csv")?;
     let mut array: Vec<Task> = Vec::new();
     for result in rdr.records() {
         let record = result?;
-        //println!("{:?}", &record[0]);
         let status = &record[2];
-        // let status = {
-        //     match &record[2] {
-        //         "active" => Status::Active,
-        //         "expired" => Status::Expired,
-        //         _ => Status::Done,
-        //     }
-        // };
         let task = Task {
             task: String::from(&record[0]),
             deadline: String::from(&record[1]),
