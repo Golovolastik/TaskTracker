@@ -69,11 +69,10 @@ pub fn change_status(input: String) -> Menu {
     }
 }
 
-pub fn read_csv() -> Result<(), Box<dyn Error>> {
+pub fn read_csv(array: &mut Vec<Task>) -> Result<(), Box<dyn Error>> {
     let file_path = String::from("task.csv");
     let file = File::open(file_path)?;
     let mut rdr = csv::ReaderBuilder::new().delimiter(b';').from_path("task.csv")?;
-    let mut array: Vec<Task> = Vec::new();
     for result in rdr.records() {
         let record = result?;
         let status = &record[2];
