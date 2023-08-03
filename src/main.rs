@@ -4,6 +4,7 @@ use std::io;
 
 fn main() {
     let mut status = Menu::MainMenu;
+    read_csv();
     loop {
         println!("{}", clear::All);
         show_menu(&mut status);

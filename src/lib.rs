@@ -1,23 +1,36 @@
 use std::process;
 use time;
+use csv;
+use std::error::Error;
+use std::fmt;
+use std::fs::File;
 
 pub enum Menu {
     MainMenu,
     TaskMenu,
 }
 
-#[warn(dead_code)]
 pub struct Task {
     task: String,
-    deadline: time::Date,
-    status: Status,
+    deadline: String,
+    status: String,
 }
 
-#[warn(dead_code)]
+#[derive(Debug)]
 enum Status {
     Done,
-    InProcess,
+    Active,
     Expired,
+}
+
+impl fmt::Debug for Task {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Task")
+            .field("task", &self.task)
+            .field("date", &self.deadline)
+            .field("status", &self.status)
+            .finish()
+    }
 }
 
 pub fn header() {
@@ -54,4 +67,34 @@ pub fn change_status(input: String) -> Menu {
             process::exit(1);
         }
     }
+}
+
+pub fn read_csv() -> Result<(), Box<dyn Error>> {
+    let file_path = String::from("task.csv");
+    let file = File::open(file_path)?;
+    //let mut rdr = csv::Reader::from_reader(file);
+    let mut rdr = csv::ReaderBuilder::new().delimiter(b';').from_path("task.csv")?;
+    let mut array: Vec<Task> = Vec::new();
+    for result in rdr.records() {
+        let record = result?;
+        //println!("{:?}", &record[0]);
+        let status = &record[2];
+        // let status = {
+        //     match &record[2] {
+        //         "active" => Status::Active,
+        //         "expired" => Status::Expired,
+        //         _ => Status::Done,
+        //     }
+        // };
+        let task = Task {
+            task: String::from(&record[0]),
+            deadline: String::from(&record[1]),
+            status: status.to_string(),
+        };
+        dbg!(&task);
+        array.push(task);
+
+
+    }
+    Ok(())
 }

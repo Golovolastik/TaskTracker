@@ -1,1 +1,1 @@
-/Users/aleksejankovic/Desktop/Study/UpRust/Rust_study/task_tracker/target/debug/task_tracker: /Users/aleksejankovic/Desktop/Study/UpRust/Rust_study/task_tracker/src/lib.rs /Users/aleksejankovic/Desktop/Study/UpRust/Rust_study/task_tracker/src/main.rs
+/Users/aleksejankovic/Desktop/Study/UpRust/Rust_study/TaskTracker/target/debug/task_tracker: /Users/aleksejankovic/Desktop/Study/UpRust/Rust_study/TaskTracker/src/lib.rs /Users/aleksejankovic/Desktop/Study/UpRust/Rust_study/TaskTracker/src/main.rs
