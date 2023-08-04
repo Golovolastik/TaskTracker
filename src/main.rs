@@ -5,7 +5,6 @@ use crate::menu::*;
 
 fn main() {
     let mut menu = Menu::MainMenu;
-    //let array = read_csv().expect("Can't read the file");
     loop {
         //println!("{}", clear::All);
         show_menu(&menu);
