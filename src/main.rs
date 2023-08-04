@@ -1,19 +1,16 @@
 use task_tracker::*;
 use termion::clear;
 use std::io;
+use crate::menu::*;
 
 fn main() {
-    let mut status = Menu::MainMenu;
-    let mut tasks = Vec::new();
-    read_csv(&mut tasks);
-    for task in tasks {
-        dbg!(task);
-    }
+    let mut menu = Menu::MainMenu;
+    //let array = read_csv().expect("Can't read the file");
     loop {
-        println!("{}", clear::All);
-        show_menu(&mut status);
+        //println!("{}", clear::All);
+        show_menu(&menu);
         let mut input = String::from("");
         io::stdin().read_line(&mut input).expect("Can't read the input");
-        status = change_status(input);
+        menu = menu::handle_input(menu, input);
     }
 }

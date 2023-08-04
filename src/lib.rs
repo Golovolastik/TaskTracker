@@ -1,13 +1,16 @@
-use std::process;
 use time;
 use csv;
 use std::error::Error;
 use std::fmt;
 use std::fs::File;
 
+pub mod menu;
+
 pub enum Menu {
     MainMenu,
+    AddTask,
     TaskMenu,
+    TaskEdit,
 }
 
 pub struct Task {
@@ -23,55 +26,27 @@ enum Status {
     Expired,
 }
 
-impl fmt::Debug for Task {
+impl fmt::Display for Task {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("Task")
-            .field("task", &self.task)
-            .field("date", &self.deadline)
-            .field("status", &self.status)
-            .finish()
+        write!(f, "{}\nDeadline: {} Status: {}\n{:-<35}", self.task, self.deadline, self.status, "")
     }
 }
 
-pub fn header() {
-    println!("{:>6}Task Tracker", "");
-    println!("{:-<25}", "");
-}
+// pub fn change_status() -> Menu {
+//     match menu {
+//         1 => Menu::MainMenu,
+//         2 => Menu::TaskMenu,
+//         _ => {
+//             println!("Hello!");
+//             process::exit(1);
+//         }
+//     }
+// }
 
-pub fn show_main_menu() {
-    println!("Press to action");
-    println!("1. Add new task");
-    println!("2. Choose task");
-    println!("3. Clear all");
-    println!("0. Exit");
-    println!("{:-<25}", "");
-}
-
-pub fn show_menu(status: &mut Menu) {
-    header();
-    match status {
-        Menu::MainMenu => show_main_menu(),
-        Menu::TaskMenu => {
-            println!("Hello!");
-        },
-    }
-}
-
-pub fn change_status(input: String) -> Menu {
-    let status = input.trim().parse().unwrap_or(-1);
-    match status {
-        1 => Menu::MainMenu,
-        2 => Menu::TaskMenu,
-        _ => {
-            println!("Hello!");
-            process::exit(1);
-        }
-    }
-}
-
-pub fn read_csv(array: &mut Vec<Task>) -> Result<(), Box<dyn Error>> {
+pub fn read_csv() -> Result<Vec<Task>, Box<dyn Error>> {
     let file_path = String::from("task.csv");
     let file = File::open(file_path)?;
+    let mut array = Vec::new();
     let mut rdr = csv::ReaderBuilder::new().delimiter(b';').from_path("task.csv")?;
     for result in rdr.records() {
         let record = result?;
@@ -81,10 +56,7 @@ pub fn read_csv(array: &mut Vec<Task>) -> Result<(), Box<dyn Error>> {
             deadline: String::from(&record[1]),
             status: status.to_string(),
         };
-        dbg!(&task);
         array.push(task);
-
-
     }
-    Ok(())
+    Ok(array)
 }
