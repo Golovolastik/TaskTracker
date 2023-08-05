@@ -88,7 +88,9 @@ fn main_menu_input(input: String, array: &mut Vec<Task>) -> Menu {
         "1" => Menu::AddTask,
         "2" => Menu::TaskMenu,
         "0" => {
-            write_to_csv(array);
+            if let Err(_) = write_to_csv(array) {
+                panic!("Can't write data to file!");
+            }
             process::exit(1)
         },
         _ => {
