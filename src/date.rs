@@ -1,7 +1,5 @@
 use time;
-use time::macros::datetime;
 use time::Duration;
-use std::fmt::format;
 
 // construct deadline date into string
 pub fn construct_date(offset: u8) -> String {

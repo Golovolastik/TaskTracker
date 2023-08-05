@@ -7,5 +7,4 @@ edition = "2021"
 
 [dependencies]
 time = { version = "0.3.25", features = ["macros"] }
-termion = "2.0.1"
 csv = "1.2.2"

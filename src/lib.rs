@@ -1,7 +1,6 @@
 use csv;
 use std::error::Error;
 use std::fmt;
-use std::fs::File;
 use crate::menu::*;
 use std::io;
 
@@ -53,7 +52,6 @@ fn init() -> (Menu, Vec<Task>) {
 pub fn run() {
     let (mut menu, mut array) = init();
     loop {
-        //println!("{}", clear::All);
         show_menu(&menu, &array);
         let mut input = String::from("");
         io::stdin().read_line(&mut input).expect("Can't read the input");
@@ -62,8 +60,6 @@ pub fn run() {
 }
 
 pub fn read_csv() -> Result<Vec<Task>, Box<dyn Error>> {
-    let file_path = String::from("task.csv");
-    let file = File::open(file_path)?;
     let mut array = Vec::new();
     let mut rdr = csv::ReaderBuilder::new().delimiter(b';').from_path("task.csv")?;
     for result in rdr.records() {

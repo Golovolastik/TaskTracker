@@ -1,4 +1,4 @@
-use crate::{Menu, Task, read_csv, AddTaskMenu, write_to_csv};
+use crate::{Menu, Task, write_to_csv};
 use std::process;
 use std::io;
 use crate::date::construct_date;
@@ -83,11 +83,6 @@ fn new_task_input(input: String, array: &mut Vec<Task>) {
     array.push(Task::new(description, deadline));
 }
 
-fn task_description_input() -> String {
-    let mut input = String::new();
-    input
-}
-
 fn main_menu_input(input: String, array: &mut Vec<Task>) -> Menu {
     match input.trim() {
         "1" => Menu::AddTask,
@@ -108,10 +103,6 @@ fn task_menu_input(input: String, array: &mut Vec<Task>) -> Menu {
         "0" => Menu::MainMenu,
         str => {
             delete_from_list(str, array);
-            Menu::TaskMenu
-        },
-        _ => {
-            println!("Wrong input! Try again.");
             Menu::TaskMenu
         },
     }
