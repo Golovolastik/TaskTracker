@@ -1,5 +1,18 @@
-use crate::{Menu, Task, read_csv, AddTaskMenu};
+use crate::{Menu, Task, read_csv, AddTaskMenu, write_to_csv};
 use std::process;
+use std::io;
+use crate::date::construct_date;
+
+pub fn handle_input(menu: Menu, input: String, array: &mut Vec<Task>) -> Menu {
+    match menu {
+        Menu::MainMenu => main_menu_input(input, array),
+        Menu::AddTask => {
+            new_task_input(input, array);
+            Menu::MainMenu
+        },
+        Menu::TaskMenu => task_menu_input(input, array),
+    }
+}
 
 fn header() {
     println!("{:-<25}", "");
@@ -12,7 +25,7 @@ pub fn show_menu(menu: &Menu, array: &Vec<Task>) {
     match menu {
         Menu::MainMenu => show_main_menu(),
         Menu::TaskMenu => show_task_menu(array),
-        Menu::AddTask(_) => println!("bye"),
+        Menu::AddTask => println!("Write task description"),
     }
 }
 
@@ -32,31 +45,57 @@ fn show_task_menu(array: &Vec<Task>) {
     show_tasks(&array);
 }
 
+fn show_offset_menu() {
+    println!("Set deadline");
+    println!("1. Today");
+    println!("2. Tomorrow");
+    println!("3. 3 days");
+    println!("4. 1 week");
+    println!("5. 2 weeks");
+    println!("6. 1 month");
+}
+
+fn deadline_input() -> u8 {
+    let mut input = String::new();
+    io::stdin().read_line(&mut input).expect("Can't read the input");
+    match input.trim() {
+        "1" => 0,
+        "2" => 1,
+        "3" => 3,
+        "4" => 7,
+        "5" => 14,
+        "6" => 30,
+        _ => 1,
+    }
+}
+
 fn show_tasks(array: &Vec<Task>) {
     for (idx, task) in array.iter().enumerate() {
         println!("{}. {}", idx+1, task);
     }
 }
 
-pub fn handle_input(menu: Menu, input: String, array: &mut Vec<Task>) -> Menu {
-    match menu {
-        Menu::MainMenu => main_menu_input(input),
-        Menu::AddTask(_) => {todo!()},
-        Menu::TaskMenu => task_menu_input(input, array),
-    }
+fn new_task_input(input: String, array: &mut Vec<Task>) {
+    let description = input.trim().to_string();
+    show_offset_menu();
+    let offset = deadline_input();
+    let deadline = construct_date(offset);
+    array.push(Task::new(description, deadline));
 }
 
-fn add_task_menu_input(input: &str, array: &mut Vec<Task>) -> Menu {
-    println!("Write task description.");
-
-    Menu::MainMenu
+fn task_description_input() -> String {
+    let mut input = String::new();
+    input
 }
 
-fn main_menu_input(input: String) -> Menu {
+fn main_menu_input(input: String, array: &mut Vec<Task>) -> Menu {
     match input.trim() {
-        "1" => Menu::AddTask(AddTaskMenu::TaskDescription),
+        "1" => Menu::AddTask,
         "2" => Menu::TaskMenu,
-        "0" => process::exit(1),
+        "0" => {
+            write_to_csv(array);
+            process::exit(1)
+        },
         _ => {
             println!("Wrong input! Try again.");
             Menu::MainMenu

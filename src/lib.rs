@@ -1,4 +1,3 @@
-use time;
 use csv;
 use std::error::Error;
 use std::fmt;
@@ -7,10 +6,11 @@ use crate::menu::*;
 use std::io;
 
 pub mod menu;
+pub mod date;
 
 pub enum Menu {
     MainMenu,
-    AddTask(AddTaskMenu),
+    AddTask,
     TaskMenu,
 }
 
@@ -26,12 +26,16 @@ pub struct Task {
 }
 
 impl Task {
-    fn new(task: String, deadline: u8) -> Self {
+    fn new(task: String, deadline: String) -> Self {
         Task {
             task,
             status: "active".to_string(),
-            deadline: "construct_date()".to_string(),
+            deadline,
         }
+    }
+
+    fn destructure(&self) -> Vec<String> {
+        vec![self.task.clone(), self.deadline.clone(), self.status.clone()]
     }
 }
 
@@ -57,11 +61,6 @@ pub fn run() {
     }
 }
 
-fn construct_date(offset: u8) -> String {
-
-    "1".to_string()
-}
-
 pub fn read_csv() -> Result<Vec<Task>, Box<dyn Error>> {
     let file_path = String::from("task.csv");
     let file = File::open(file_path)?;
@@ -80,11 +79,13 @@ pub fn read_csv() -> Result<Vec<Task>, Box<dyn Error>> {
     Ok(array)
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn date_construction() {
-        println!("{}", time::OffsetDateTime::now_utc());
-        assert!(time::OffsetDateTime::now_utc().year() >= 2022);
+fn write_to_csv(array: &mut Vec<Task>) -> Result<(), Box<dyn Error>> {
+    let mut wtr = csv::WriterBuilder::new()
+        .delimiter(b';')
+        .from_path("task.csv")?;
+    for task in array {
+        wtr.write_record(&task.destructure())?;
     }
+    wtr.flush()?;
+    Ok(())
 }
