@@ -61,7 +61,10 @@ pub fn run() {
 
 pub fn read_csv() -> Result<Vec<Task>, Box<dyn Error>> {
     let mut array = Vec::new();
-    let mut rdr = csv::ReaderBuilder::new().delimiter(b';').from_path("task.csv")?;
+    let mut rdr = csv::ReaderBuilder::new()
+        .delimiter(b';')
+        .has_headers(false)
+        .from_path("task.csv")?;
     for result in rdr.records() {
         let record = result?;
         let status = &record[2];
