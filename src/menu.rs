@@ -42,7 +42,7 @@ fn show_task_menu(array: &Vec<Task>) {
     println!("0. Exit to main menu");
     println!("Enter the number of task to mark it as done");
     println!("{:-<25}", "");
-    show_tasks(&array);
+    show_tasks(array);
 }
 
 fn show_offset_menu() {
@@ -69,7 +69,7 @@ fn deadline_input() -> u8 {
     }
 }
 
-fn show_tasks(array: &Vec<Task>) {
+fn show_tasks(array: &[Task]) {
     for (idx, task) in array.iter().enumerate() {
         println!("{}. {}", idx+1, task);
     }
@@ -128,7 +128,6 @@ fn delete_from_list(input: &str, array: &mut Vec<Task>) {
     let idx:usize = input.parse().unwrap();
     if idx > array.len() {
         println!("Too big number!");
-        return;
     } else {
         array.remove(idx-1);
     }

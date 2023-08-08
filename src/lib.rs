@@ -1,4 +1,3 @@
-use csv;
 use std::error::Error;
 use std::fmt;
 use crate::menu::*;
