@@ -20,8 +20,8 @@ fn add_days_to_current_date(offset: u8) -> time::OffsetDateTime {
 
 #[cfg(test)]
 mod tests {
-    use time::macros::datetime;
     use crate::date::construct_date;
+    use time::macros::datetime;
 
     #[test]
     fn today_date() {

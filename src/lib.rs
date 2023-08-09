@@ -1,10 +1,10 @@
+use crate::menu::*;
 use std::error::Error;
 use std::fmt;
-use crate::menu::*;
 use std::io;
 
-pub mod menu;
 pub mod date;
+pub mod menu;
 
 pub enum Menu {
     MainMenu,
@@ -14,7 +14,7 @@ pub enum Menu {
 
 pub enum AddTaskMenu {
     TaskDescription,
-    Deadline
+    Deadline,
 }
 
 pub struct Task {
@@ -33,13 +33,21 @@ impl Task {
     }
 
     fn destructure(&self) -> Vec<String> {
-        vec![self.task.clone(), self.deadline.clone(), self.status.clone()]
+        vec![
+            self.task.clone(),
+            self.deadline.clone(),
+            self.status.clone(),
+        ]
     }
 }
 
 impl fmt::Display for Task {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}\nDeadline: {} Status: {}\n{:-<35}", self.task, self.deadline, self.status, "")
+        write!(
+            f,
+            "{}\nDeadline: {} Status: {}\n{:-<35}",
+            self.task, self.deadline, self.status, ""
+        )
     }
 }
 fn init() -> (Menu, Vec<Task>) {
@@ -53,7 +61,9 @@ pub fn run() {
     loop {
         show_menu(&menu, &array);
         let mut input = String::from("");
-        io::stdin().read_line(&mut input).expect("Can't read the input");
+        io::stdin()
+            .read_line(&mut input)
+            .expect("Can't read the input");
         menu = menu::handle_input(menu, input, &mut array);
     }
 }

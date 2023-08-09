@@ -1,7 +1,7 @@
-use crate::{Menu, Task, write_to_csv};
-use std::process;
-use std::io;
 use crate::date::construct_date;
+use crate::{write_to_csv, Menu, Task};
+use std::io;
+use std::process;
 
 pub fn handle_input(menu: Menu, input: String, array: &mut Vec<Task>) -> Menu {
     match menu {
@@ -9,7 +9,7 @@ pub fn handle_input(menu: Menu, input: String, array: &mut Vec<Task>) -> Menu {
         Menu::AddTask => {
             new_task_input(input, array);
             Menu::MainMenu
-        },
+        }
         Menu::TaskMenu => task_menu_input(input, array),
     }
 }
@@ -57,7 +57,9 @@ fn show_offset_menu() {
 
 fn deadline_input() -> u8 {
     let mut input = String::new();
-    io::stdin().read_line(&mut input).expect("Can't read the input");
+    io::stdin()
+        .read_line(&mut input)
+        .expect("Can't read the input");
     match input.trim() {
         "1" => 0,
         "2" => 1,
@@ -71,7 +73,7 @@ fn deadline_input() -> u8 {
 
 fn show_tasks(array: &[Task]) {
     for (idx, task) in array.iter().enumerate() {
-        println!("{}. {}", idx+1, task);
+        println!("{}. {}", idx + 1, task);
     }
 }
 
@@ -92,7 +94,7 @@ fn main_menu_input(input: String, array: &mut Vec<Task>) -> Menu {
                 panic!("Can't write data to file!");
             }
             process::exit(1)
-        },
+        }
         _ => {
             println!("Wrong input! Try again.");
             Menu::MainMenu
@@ -106,11 +108,11 @@ fn task_menu_input(input: String, array: &mut Vec<Task>) -> Menu {
         str => {
             delete_from_list(str, array);
             Menu::TaskMenu
-        },
+        }
     }
 }
 
-fn check_task_input(input: &str) -> bool{
+fn check_task_input(input: &str) -> bool {
     if let Err(_) = input.parse::<i32>() {
         println!("Wrong input! Try again.");
         return false;
@@ -125,10 +127,10 @@ fn delete_from_list(input: &str, array: &mut Vec<Task>) {
     if !check_task_input(input) {
         return;
     }
-    let idx:usize = input.parse().unwrap();
+    let idx: usize = input.parse().unwrap();
     if idx > array.len() {
         println!("Too big number!");
     } else {
-        array.remove(idx-1);
+        array.remove(idx - 1);
     }
 }
